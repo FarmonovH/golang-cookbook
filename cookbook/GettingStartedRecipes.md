@@ -82,6 +82,6 @@ shu ko'rinishda test qilinadi hali bu masalaga yana to'xtalamiz
 
 *go get github.com/example/package@v1.2.3*
 yoki oxirgisi kerak bo'lsa 
-*go get github.com/example/package@latest*
+***go get github.com/example/package@latest***
 
 
