@@ -1,34 +1,48 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 )
 
-type ConnError struct {
-	Line int
-	Message string
-	Code int
+type CustomError struct {}
+
+func (c CustomError) Error() string {
+	return fmt.Sprintf("some error %d", 404)
 }
 
-func (c ConnError)Error() string {
-	return fmt.Sprintf("Message: %s, Line: %d, Code: %d", c.Message, c.Line, c.Code)
-}
-
-func connError() error {
-	return &ConnError{
-		Line: 32,
-		Message: "some error",
-		Code: 500,
+func unwrap(err error) error {
+	for {
+		newErr := errors.Unwrap(err)
+		if newErr == nil {
+			return err
+		}
+		err = newErr
 	}
-}
+} 
+
 
 func main(){
-	if err := connError(); err != nil {
-        err, ok := err.(*ConnError)
-		if ok {
-			fmt.Println(err.Error())
-		} else {
-			panic(err)
-		}
-	}
+	err1 := fmt.Errorf("some error")
+	err3 := fmt.Errorf("err3 %w", err1)
+	err4 := fmt.Errorf("err4 %w", err3)
+	err5 := fmt.Errorf("err5 %w", err4)
+	
+	// err2 := errors.New("some error")
+	// fmt.Println(err3.Error() == err2.Error())
+	fmt.Println(errors.Is(err3, err1))
+	// fmt.Println(err3.Error())
+	// fmt.Println(err2.Error())
+
+	// fmt.Println(err3)
+	// fmt.Println(errors.Unwrap(err3))
+	// fmt.Println(errors.Unwrap(err1) == nil)
+	val1 := unwrap(err5)
+	val2 := err1
+	fmt.Println(val1 == val2)
+
+
+	// err32 := fmt.Errorf("some error")
+
+
 }
