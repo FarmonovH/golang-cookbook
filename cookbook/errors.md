@@ -93,5 +93,52 @@ func main(){
 
 ## Wrapping errors (errorlarni wrap qilish)
 
-Wrapping degani 
+Wrapping degani qandaydir errorni olib ustiga qo'shimcha yozib yana qaytarish 
+biz buni fmt.Errorf yordamida amalga oshiramiz.
+
+```go 
+func connDatabase() error {
+    return errors.New("err conn to database")
+}
+
+func executeQuery() error {
+    if err := connDatabase(); err != nil {
+        return err
+    }
+}
+
+func httpHandler() error {
+    if err := executeQuery(); err != nil {
+        return err
+    }
+}
+
+```
+shu ko'rinishda yozsak codeni bu xatoni topish qiyinlashadi masalan error httpHandlerda bo'lsa ham ***err conn to database*** chiqadi, bu esa qaysi qatlamda error bo'lganini bilaolmaymiz 
+
+endi keyingi codega nazar soling 
+```go 
+func connDatabase() error {
+    return errors.New("err conn to database")
+}
+
+func executeQuery() error {
+    if err := connDatabase(); err != nil {
+        return fmt.Errorf("execute query: %w", err)
+    }
+}
+
+func httpHandler() error {
+    if err := executeQuery(); err != nil {
+        return fmt.Errorf("http handler: %w", err)
+    }
+}
+```
+
+bu yerda errorni wrap qildik qaysi qatlamda error chiqsa aniq bila olamiz qaysi qatlamda error borligini  
+execute query: err conn to database  deb chiqadi shu error wrapping deyiladi.
+
+## Errorlarni tekshirish (Inspecting errors)
+
+Errorlarni tekshirish ushbu error aynan bu errormi degan savolga javob beradi.
 
