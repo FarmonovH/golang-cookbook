@@ -142,3 +142,23 @@ execute query: err conn to database  deb chiqadi shu error wrapping deyiladi.
 
 Errorlarni tekshirish ushbu error aynan bu errormi degan savolga javob beradi.
 
+Bizda ayrim paytlar errorlarni solishtirishimizga to'g'ri keladi masalan
+
+```go 
+func main() {
+    err1 := errors.New("some...")
+    err2 := errors.New("some...")
+    /* == bu operator bilan tenglashtirsa bo'ladi lekin bitta joyi xato bo'lsa kutilmagan vaziyatlarga olib keladi*/
+    if err1.Error() == "some.." {
+        //do someting
+    }
+}
+```
+lekin wrapper errorlarda eng asosiy error bilan solishtirganda == operatori ishlamaydi 
+errors.Is(err, target) bu solishtiradi va wrapped bo'lsa unwrap qilib rekrusiv tekshiradi 
+errors.At(error, &type_error) bu error turini tekshiradi
+
+## Errorlar Panic bilan 
+
+
+
