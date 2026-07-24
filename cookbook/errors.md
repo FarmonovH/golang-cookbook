@@ -160,5 +160,59 @@ errors.At(error, &type_error) bu error turini tekshiradi
 
 ## Errorlar Panic bilan 
 
+Panic bu qaysi function ishlayotgan bo'lsa ushbu gorutine ni to'xtatadi qaysidur funksya ichida ishayotgan bo'lsa ushbu funksyani to'xtatadi 
+faqat panicdan keyin defer ishlaydi bo'ldi.
+
+```go 
+func A(){
+    defer func(){
+         // some code 
+    }()
+
+    panic("panic")
+}
+```
+
+Bu codeda brinchi panic beradi va keyin defer ichidagi code ishlaydi 
+
+```go 
+package main
+
+import (
+	"fmt"
+)
+
+func  A(){
+	defer fmt.Println("defered A")
+	B()
+}
+
+func B(){
+	defer func(){
+		if err := recover(); err != nil {
+			fmt.Println("panic ", err)
+		} else {
+			fmt.Println("panic not found")
+		}
+	}()
+	C()
+}
+
+func C() {
+	defer fmt.Println("defer C")
+	raisePanic()
+}
+
+func raisePanic(){
+	panic("raise panic function")
+}
+
+func main() {
+	A()
+}
+```
+
+bu yerda error ushlab qolinib qayta ishlanyabdi 
+
 
 
